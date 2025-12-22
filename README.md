@@ -3,11 +3,11 @@ Live Demo Link: https://researchpaperrecommender.streamlit.app/
 
 A content-based recommender system that suggests research papers similar to a selected paper using **TF-IDF vectorization** and **cosine similarity**.
 
-🔍 Overview
+1.Overview
 
 This project helps users discover semantically similar research papers based on textual similarity between paper titles and summary of the respective research papers. It is designed as a lightweight, interactive web application.
 
-🧠 Methodology
+2.Methodology
 - Text preprocessing using regex-based cleaning
 - Feature extraction using **TF-IDF**
 - Similarity computation using **cosine similarity**
@@ -24,14 +24,14 @@ For faster performance, the processed data was saved into pickle files. The vect
 
 Dataset Link: https://www.kaggle.com/datasets/sumitm004/arxiv-scientific-research-papers-dataset
 
-🛠️ Tech Stack
+3.Tech Stack
 - Python
 - Pandas
 - NumPy
 - Scikit-learn
 - Streamlit
 
-🚀 Features
+4.Features
 - Select a paper and get top similar recommendations
 - Displays paper title and publication date
 - Scrollable and clean UI
@@ -39,6 +39,6 @@ Dataset Link: https://www.kaggle.com/datasets/sumitm004/arxiv-scientific-researc
 - Clear separation between preprocessing and inference
 
 
-## ▶️ How to Run Locally
+5.How to Run Locally
 ```bash
 python -m streamlit run app.py
