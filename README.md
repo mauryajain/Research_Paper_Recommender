@@ -1,4 +1,5 @@
                                                 📄 Research Paper Recommender System
+Live Demo Link: https://researchpaperrecommender.streamlit.app/
 
 A content-based recommender system that suggests research papers similar to a selected paper using **TF-IDF vectorization** and **cosine similarity**.
 
