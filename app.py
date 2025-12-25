@@ -68,7 +68,8 @@ def recommend(paper,year_range, top_k,sort_desc):
         idx = filtered_indices[i[0]]
         results.append({
             "title": final.loc[idx, "title"],
-            "date": final.loc[idx, "published_date"]
+            "date": final.loc[idx, "published_date"],
+            "similarity_score": scores[i[0]]
         })
 
     # sort by date
@@ -80,7 +81,8 @@ def recommend(paper,year_range, top_k,sort_desc):
 
     titles_clean = [re.sub(r'\s+', ' ', r["title"]) for r in results]
     titles_raw = [r["title"] for r in results]
-    return titles_clean, titles_raw
+    similarity_score=[r["similarity_score"] for r in results]
+    return titles_clean, titles_raw,similarity_score
 
 
 # -------------------- UI --------------------
@@ -108,13 +110,14 @@ with st.expander("Filters"):
     )
 
 if st.button("Recommend"):
-    results,results2 = recommend(paper, year_range, top_k,sort_desc)
+    results,results2,sim_scores= recommend(paper, year_range, top_k,sort_desc)
     st.subheader("Recommended Papers")
 
     # Scrollable container
     html = "<div style='max-height: 450px; overflow-y: auto;'>"
     for i in range(0,len(results)):
         st.markdown(f"**{results[i]}**")
+        st.caption(f"Similarity score: {sim_scores[i]:.2f}")
         published_date = final.loc[final['title'] == results2[i], 'published_date'].iloc[0]
         date_only = published_date.strftime('%Y-%m-%d')
         print(date_only)
