@@ -24,22 +24,63 @@ def load_data():
     return final, vectors
 
 final, vectors = load_data()
+# Compute year range once
+min_year = final["published_date"].dt.year.min()
+max_year = final["published_date"].dt.year.max()
 
 # -------------------- Recommendation Function --------------------
-def recommend(paper):
+def recommend(paper,year_range, top_k,sort_desc):
+    # index of selected paper
     paper_idx = final.index[final['title'] == paper][0]
-    scores = cosine_similarity(vectors[paper_idx], vectors)[0]
-    #scores is a 1d array with cosine values between entered paper and rest others
-    top=sorted(list(enumerate(scores)),reverse=True, key=lambda x:x[1])[1:9]
-    #enumerate creates tuples with (index,cosine values)
-    #top_dates=sorted(top,reverse=True, key=lambda x:final['published_date'].iloc[x[0]])
-    stack=[]
-    stack2=[]
+
+    # filter dataframe by year
+    filtered_final = final[
+        (final["published_date"].dt.year >= year_range[0]) &
+        (final["published_date"].dt.year <= year_range[1])
+        ].copy()
+
+    if len(filtered_final) <= 1:
+        return [], []
+
+    # cap top_k safely
+    top_k = min(top_k, len(filtered_final) - 1)
+
+    # get filtered vectors
+    filtered_indices = filtered_final.index
+    filtered_vectors = vectors[filtered_indices]
+
+    # compute similarity ONLY on filtered vectors
+    scores = cosine_similarity(
+        vectors[paper_idx],
+        filtered_vectors
+    )[0]
+
+    # rank results
+    top = sorted(
+        list(enumerate(scores)),
+        reverse=True,
+        key=lambda x: x[1]
+    )[1:top_k + 1]
+
+    results = []
+
     for i in top:
-        stack2.append(final['title'].iloc[i[0]])
-    for i in top:
-        stack.append(re.sub(r'\s+', ' ',final['title'].iloc[i[0]]))
-    return stack,stack2
+        idx = filtered_indices[i[0]]
+        results.append({
+            "title": final.loc[idx, "title"],
+            "date": final.loc[idx, "published_date"]
+        })
+
+    # sort by date
+    results = sorted(
+        results,
+        key=lambda x: x["date"],
+        reverse=sort_desc
+    )
+
+    titles_clean = [re.sub(r'\s+', ' ', r["title"]) for r in results]
+    titles_raw = [r["title"] for r in results]
+    return titles_clean, titles_raw
 
 
 # -------------------- UI --------------------
@@ -47,10 +88,27 @@ paper = st.selectbox(
     "Select a research paper",
     final["title"].values
 )
+with st.expander("Filters"):
+    year_range = st.slider(
+        "Publication Year",
+        int(min_year),
+        int(max_year),
+        (int(min_year), int(max_year))
+    )
+
+    top_k = st.slider(
+        "Number of recommendations",
+        min_value=2,
+        max_value=10,
+        value=8
+    )
+    sort_desc = st.toggle(
+        "Sort by Date (Newest first)",
+        value=True
+    )
 
 if st.button("Recommend"):
-    results,results2 = recommend(paper)
-
+    results,results2 = recommend(paper, year_range, top_k,sort_desc)
     st.subheader("Recommended Papers")
 
     # Scrollable container
