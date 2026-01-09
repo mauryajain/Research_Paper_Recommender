@@ -1,4 +1,5 @@
 # Research Paper Exploration Dashboard
+Live Prototype Link: https://researchpaperrecommender.streamlit.app/
 
 An interactive web-based application built using Streamlit for discovering, analyzing, and exploring research papers through recommendations, publication trend analysis, and description-based search.
 
