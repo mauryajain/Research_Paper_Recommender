@@ -1,44 +1,106 @@
-                                                📄 Research Paper Recommender System
+                                                Research Paper Recommender System
 Live Demo Link: https://researchpaperrecommender.streamlit.app/
 
-A content-based recommender system that suggests research papers similar to a selected paper using **TF-IDF vectorization** and **cosine similarity**.
+Research Paper Exploration Dashboard
 
-1.Overview
+A multi-feature, content-based research paper exploration system that enables recommendation, publication trend analysis, and description-based paper search using natural language processing and data visualization techniques.
 
-This project helps users discover semantically similar research papers based on textual similarity between paper titles and summary of the respective research papers. It is designed as a lightweight, interactive web application.
+1. Overview
 
-2.Methodology
-- Text preprocessing using regex-based cleaning
-- Feature extraction using **TF-IDF**
-- Similarity computation using **cosine similarity**
-- Ranking of papers based on semantic relevance
-- Interactive UI built with **Streamlit**
+This project is an interactive web-based application designed to assist users in exploring academic research papers more effectively. Instead of functioning solely as a recommender system, the application provides a unified dashboard with multiple analytical and discovery-oriented features.
 
-The dataset of research papers used in this project was taken from Kaggle and analyzed to build a research paper recommender system. The goal of the system is to recommend papers that are similar based on the titles and summaries of the research papers.
+Users can:
+Discover research papers similar to a selected paper
+Analyze publication trends across years and research categories
+Search for relevant papers using a short textual description
+The application is implemented using Streamlit, making it lightweight, interactive, and easy to use.
 
-To do this, the TF-IDF (Term Frequency–Inverse Document Frequency) technique was used. The title and summary of each paper were combined and converted into numerical form. Around 15,000 unique words were selected, and each research paper was represented as a vector of numbers. Each number (TF-IDF weight) shows how important a word is in that paper compared to all other papers in the dataset.
+2. Methodology
 
-These vectors were then compared using cosine similarity, which measures how close two papers are in terms of their content. A higher cosine similarity value means the papers are more similar.
+The project follows a content-based approach using textual information from research papers such as titles and summaries.
 
-For faster performance, the processed data was saved into pickle files. The vectors.pkl file stores the TF-IDF vectors of all research papers, and the final.pkl file stores the paper details such as titles and publication dates. Using these saved files, the system can quickly find and display the top 15 most similar research papers for a given input paper.
+Common Preprocessing Steps
+Text cleaning using regular expressions
+Removal of noise and irrelevant characters
+Combination of paper titles and summaries for richer context
 
-Dataset Link: https://www.kaggle.com/datasets/sumitm004/arxiv-scientific-research-papers-dataset
+The processed data is then used differently across the three features described below.
 
-3.Tech Stack
-- Python
-- Pandas
-- NumPy
-- Scikit-learn
-- Streamlit
+3. Features and Implementation
+3.1 Research Paper Recommender
 
-4.Features
-- Select a paper and get top similar recommendations
-- Displays paper title and publication date
-- Scrollable and clean UI
-- Cached data loading for faster performance
-- Clear separation between preprocessing and inference
+This feature recommends research papers that are semantically similar to a selected paper.
 
+Approach Used:
 
-5.How to Run Locally
-```bash
-python -m streamlit run app.py
+TF-IDF (Term Frequency–Inverse Document Frequency) vectorization
+Cosine similarity for similarity measurement
+
+The combined text (title + summary) of each paper is converted into a TF-IDF vector representation, capturing the importance of words relative to the entire dataset. Approximately 15,000 unique terms are used to represent the corpus.
+
+Cosine similarity is then applied to measure the closeness between papers in vector space. Papers with higher similarity scores are considered more relevant.
+
+For performance optimization:
+
+vectors.pkl stores the precomputed TF-IDF vectors
+final.pkl stores metadata such as paper titles and publication dates
+
+The system retrieves and displays the top 15 most similar papers for a selected input paper.
+
+3.2 Publication Trend Analysis
+
+This feature analyzes how research activity evolves over time for different research categories.
+
+Approach Used:
+Temporal analysis of publication dates
+Year-wise aggregation of papers
+Interactive bar chart visualization using Altair
+
+The publication date of each paper is extracted and grouped by year. For a selected research category, the system:
+Displays a bar graph showing the number of papers published each year
+Analyzes growth, stability, or decline in publication volume
+Provides qualitative insights such as emerging trends, mature fields, or declining research interest
+
+This helps users understand the maturity and momentum of a research field over time.
+
+3.3 Description-Based Paper Search
+
+This feature allows users to find relevant research papers using a short textual description instead of selecting an existing paper.
+
+Approach Used:
+TF-IDF vectorization of the input description
+Cosine similarity with existing paper vectors
+
+The user’s input text is transformed into a TF-IDF vector using the same vocabulary as the dataset. Cosine similarity is then computed between the input vector and all stored paper vectors.
+
+Papers with the highest similarity scores are returned as recommendations, making this feature useful when users:
+Do not know exact paper titles
+Are exploring a new topic
+Want suggestions based on an abstract idea
+
+4. Dataset
+
+The dataset used in this project was sourced from Kaggle:
+Dataset: ArXiv Scientific Research Papers
+Link: https://www.kaggle.com/datasets/sumitm004/arxiv-scientific-research-papers-dataset
+
+It contains metadata including paper titles, summaries, categories, and publication dates, which are essential for both recommendation and trend analysis.
+
+5. Tech Stack
+
+Python
+Pandas – Data manipulation and preprocessing
+NumPy – Numerical operations
+Scikit-learn – TF-IDF vectorization and cosine similarity
+Streamlit – Interactive web interface
+Altair – Data visualization
+
+6. Key Highlights
+
+Content-based recommendation system
+Publication trend analysis with visual insights
+Description-based semantic search
+Cached data loading for faster performance
+Modular Streamlit multipage architecture
+Clear separation between preprocessing and inference
+
